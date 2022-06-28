@@ -1,5 +1,6 @@
 package ifpr.pgua.eic.tads;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -52,6 +53,46 @@ public class App {
         return str;
 
     }
+    public static boolean naoRepetirCpf (String cpf, ArrayList<String> pegaCpf){
+        boolean erro = false;
+
+        for(int i = 0; i < pegaCpf.size(); i++ ){
+        if(cpf.equals(pegaCpf.get(i))){
+            erro = true;    
+        }
+        else{
+            erro = false;
+        }
+        }
+        return erro;
+}
+    public static boolean naoRepetir(int valor, ArrayList<Integer> pegaConta){
+        boolean erro = false;
+
+        for(int i = 0; i < pegaConta.size(); i++ ){
+        if(valor == (pegaConta.get(i))){
+            erro = true;    
+        }
+        else{
+            erro = false;
+        }
+        }
+        return erro;
+    }
+
+    public static boolean naoRepetirAgencia(int valor, ArrayList<Integer> pegaAgencia){
+        boolean erro = false;
+
+        for(int i = 0; i < pegaAgencia.size(); i++ ){
+        if(valor == (pegaAgencia.get(i))){
+            erro = true;    
+        }
+        else{
+            erro = false;
+        }
+        }
+        return erro;
+    }
 
     public static void main(String[] args) throws Exception {
         ContaCorrente conta = null;
@@ -60,14 +101,15 @@ public class App {
 
         Scanner scan = new Scanner(System.in);
         int opcao;
-
+        ArrayList<String> pegaCpf = new ArrayList<>();
+        ArrayList<Integer>pegaConta = new ArrayList<>();
+        ArrayList<Integer>pegaAgencia = new ArrayList<>();
         int numeroDaConta;
         int agencia;
         String documento;
         String senha;
         boolean ativa;
         double saldo, valor;
-
         String nome, cpf;
         int idade;
         double salario;
@@ -86,10 +128,22 @@ public class App {
                         nome = scan.nextLine();
                         System.out.println("Digite o cpf:");
                         cpf = scan.nextLine();
+                        while(naoRepetirCpf(cpf, pegaCpf)){
+                            System.out.println("Erro, este numero de cpf ja existe");
+                            cpf = scan.next();
+                        }
+                            pegaCpf.add(cpf);
+
+
+                    
                         System.out.println("Digite a idade:");
                         idade = scan.nextInt();
                         System.out.println("Digite o salario:");
                         salario = scan.nextDouble();
+                    
+
+
+
 
                         pessoa = new Pessoa(nome, cpf, idade, salario);
                         banco.cadastrarPessoa(pessoa);
@@ -117,9 +171,22 @@ public class App {
 
                             System.out.println("Digite o número da conta:");
                             numeroDaConta = scan.nextInt();
+                            while(naoRepetir(numeroDaConta, pegaConta)){
+                                System.out.println("Erro, esta conta ja existe");
+                                numeroDaConta = scan.nextInt();
+                            }
+                                pegaConta.add(numeroDaConta);
+
                             scan.nextLine();
                             System.out.println("Digite a agência:");
                             agencia = scan.nextInt();
+                            while(naoRepetirAgencia(agencia, pegaAgencia)){
+                                System.out.println("Erro, esta agencia ja existe");
+                                agencia = scan.nextInt();
+                            }
+                                pegaAgencia.add(agencia);
+
+
                             scan.nextLine();
                             System.out.println("Digite a senha:");
                             senha = scan.nextLine();
@@ -198,9 +265,9 @@ public class App {
                     break;
                     case 2:
                         System.out.println("Listar contas!");
-                        ContaCorrente[] contas = banco.getContaCorrentes();
-                        for(int i=0;i<contas.length;i++){
-                            System.out.println(contas[i]);
+                        ArrayList<ContaCorrente> contas = banco.getContaCorrentes();
+                        for(int i=0;i<contas.size();i++){
+                            System.out.println(contas.get(i));
                         }
                     break;
                 }   
